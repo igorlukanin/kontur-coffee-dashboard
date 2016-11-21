@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Sans');
+
+body {
+    margin: 50px 150px;
+    font-family: 'PT Sans', 'Helvetica Neue', sans-serif;
+}
+
+h1 {
+    font-weight: inherit;
+}
+
+.week-header {
+    margin: 3em 0 1em;
+
+    font-size: 11pt;
+    letter-spacing: 0.25em;
+    line-height: 3em;
+    text-transform: uppercase;
+}
+
+.week-header__days:before {
+    content: '\00b7  ';
+}
+
+.week-header__days {
+    opacity: 0.5;
+}
+
+.columns {
+
+}
+
+.columns__column {
+    display: inline-block;
+    width: 35vw;
+}
+
+.counters {
+
+}
+
+.counters__counter {
+    display: inline-block;
+    margin-right: 3em;
+
+    vertical-align: top;
+}
+
+.counters__counter__value {
+    display: block;
+    margin-left: -0.05em;
+    margin-bottom: -.15em;
+
+    font-size: 4em;
+}
+
+.counters__counter__note {
+    font-size: 9pt;
+}
+
+.chart {
+    margin-top: 1em;
+}
+
+.chart__bar {
+
+}
+
+.chart__bar__top {
+
+}
+
+.chart__bar_sales {
+    fill: #eee;
+}
+
+.chart__bar__top_sales {
+    fill: none;
+}
+
+.chart__bar_guests {
+    fill: #ddd;
+}
+
+.chart__bar__top_guests {
+    fill: none;
+}
+
+.chart__x-scale-line {
+    fill: #ccc;
+}
+
+.chart__x-scale-date {
+    opacity: 0.5;
+
+    font-size: 9pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.currency {
+    opacity: 0.5;
+}
+
+.currency:before {
+    content: '\2009';
+}
