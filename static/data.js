@@ -12,7 +12,7 @@
             : getDayText(startOfWeek) + '—' + getDayText(endOfWeek);
     };
 
-    var drawBars = function(chart, options, data, xScale, yScale, hoverHandler) {
+    var drawBars = function(chart, options, data, xScale, yScale, topValues, bottomValues, hoverHandler) {
         var barWidth = xScale(data.weeks[1]) - xScale(data.weeks[0]);
 
         data.weeks.forEach(week => {
@@ -26,14 +26,14 @@
 
             bar.append('rect')
                 .classed('chart__bar_sales', true)
-                .attr('y', function(d) { return yScale(data.sales[week]); })
-                .attr('height', function(d) { return options.height - yScale(data.sales[week]); })
+                .attr('y', function(d) { return yScale(topValues(data)[week]); })
+                .attr('height', function(d) { return options.height - yScale(topValues(data)[week]); })
                 .attr('width', barWidth);
 
             bar.append('rect')
                 .classed('chart__bar_guests', true)
-                .attr('y', function(d) { return yScale(data.users[week]); })
-                .attr('height', function(d) { return options.height - yScale(data.users[week]); })
+                .attr('y', function(d) { return yScale(bottomValues(data)[week]); })
+                .attr('height', function(d) { return options.height - yScale(bottomValues(data)[week]); })
                 .attr('width', barWidth);
         });
     };
@@ -43,7 +43,7 @@
         chart.selectAll('.chart__bar__' + week).classed('chart__bar_selected', true);
     };
 
-    var drawUsersAndSalesGraph = function(selector, data) {
+    var drawBarChart = function(selections, selection, data, maxValue, topValues, bottomValues) {
         var options = {
             width: 300,
             height: 150,
@@ -51,8 +51,7 @@
             xScaleLineHeight: 1
         };
 
-        var chart = d3.select(selector)
-            .append('svg')
+        var chart = selection.append('svg')
             .attr('width', options.width)
             .attr('height', options.height + options.xScaleHeight);
 
@@ -62,10 +61,10 @@
 
         var y = d3.scaleLinear()
             .range([options.height, 0])
-            .domain([0, data.max.sales]);
+            .domain([0, maxValue(data)]);
 
-        drawBars(chart, options, data, x, y, function(week) {
-            highlightWeek(chart, data, week);
+        drawBars(chart, options, data, x, y, topValues, bottomValues, function(week) {
+            highlightWeek(selections, data, week);
         });
 
         var xScaleLine = chart.append('g')
@@ -85,10 +84,30 @@
             .text(getDayText(moment().week(data.max.week).isoWeekday(7)));
 
         chart.on('mouseout', function() {
-            highlightLastWeek(chart, data);
+            highlightLastWeek(selections, data);
         });
 
-        highlightLastWeek(chart, data);
+        highlightLastWeek(selections, data);
+    };
+
+    var drawBarCharts = function(selector1, selector2, data) {
+        var selections = [ d3.select(selector1), d3.select(selector2) ];
+
+        drawBarChart(selections, selections[0], data, function(data) {
+            return data.max.sales;
+        }, function(data) {
+            return data.sales;
+        }, function(data) {
+            return data.users;
+        });
+
+        drawBarChart(selections, selections[1], data, function(data) {
+            return data.max.arpg;
+        }, function(data) {
+            return data.arpg;
+        }, function(data) {
+            return data.arps;
+        });
     };
 
     var setCounters = function(data, week) {
@@ -99,13 +118,16 @@
         d3.select('.placeholder__week-sales-anonymous').text(data.anonymousSales[week]);
         d3.select('.placeholder__week-guests').text(data.users[week]);
 
-        d3.select('.placeholder__week-arps').text('—'); // TODO: Change
-        d3.select('.placeholder__week-arpg').text('—'); // TODO: Change
+        d3.select('.placeholder__week-arps').text(data.arps[week]);
+        d3.select('.placeholder__week-arpg').text(data.arpg[week]);
     };
 
-    var highlightWeek = function(chart, data, week) {
+    var highlightWeek = function(selections, data, week) {
         setCounters(data, week);
-        setBarSelected(chart, week);
+
+        selections.forEach(function(selection) {
+            setBarSelected(selection, week);
+        });
     };
 
     var highlightLastWeek = function(chart, data) {
@@ -114,6 +136,6 @@
     };
 
     d3.json('/data/sales-and-guests.json', function(data) {
-        drawUsersAndSalesGraph('.chart__users-and-sales', data);
+        drawBarCharts('.chart__users-and-sales', '.chart__arpg-and-arps', data);
     });
 })();

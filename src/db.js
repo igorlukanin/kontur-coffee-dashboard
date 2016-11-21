@@ -10,7 +10,7 @@ const connection = r.connect({
 
 const getSales = () => connection.then(c =>
     r.table('sales')
-        .pluck('client_personnel_number', 'datetime')
+        .pluck('client_personnel_number', 'sum', 'datetime')
         .run(c)
         .then(cursor => cursor.toArray()));
 
