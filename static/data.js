@@ -12,28 +12,35 @@
             : getDayText(startOfWeek) + '—' + getDayText(endOfWeek);
     };
 
-    var drawBars = function(chart, options, keys, data, xScale, yScale, classModifier) {
-        var barWidth = xScale(keys[1]) - xScale(keys[0]);
+    var drawBars = function(chart, options, data, xScale, yScale, hoverHandler) {
+        var barWidth = xScale(data.weeks[1]) - xScale(data.weeks[0]);
 
-        keys.forEach(i => {
-
+        data.weeks.forEach(week => {
             var bar = chart.append('g')
-                .attr('transform', 'translate(' + xScale(i) + ', 0)');
+                .classed('chart__bar', true)
+                .classed('chart__bar__' + week, true)
+                .attr('transform', 'translate(' + xScale(week) + ', 0)')
+                .on('mouseover', function() {
+                    hoverHandler(week);
+                });
 
             bar.append('rect')
-                .classed('chart__bar', true)
-                .classed('chart__bar_' + classModifier, true)
-                .attr('y', function(d) { return yScale(data[i]); })
-                .attr('height', function(d) { return options.height - yScale(data[i]); })
+                .classed('chart__bar_sales', true)
+                .attr('y', function(d) { return yScale(data.sales[week]); })
+                .attr('height', function(d) { return options.height - yScale(data.sales[week]); })
                 .attr('width', barWidth);
 
             bar.append('rect')
-                .classed('chart__bar__top', true)
-                .classed('chart__bar__top_' + classModifier, true)
-                .attr('y', function(d) { return yScale(data[i]); })
-                .attr('height', options.topLineHeight)
+                .classed('chart__bar_guests', true)
+                .attr('y', function(d) { return yScale(data.users[week]); })
+                .attr('height', function(d) { return options.height - yScale(data.users[week]); })
                 .attr('width', barWidth);
         });
+    };
+
+    var setBarSelected = function(chart, week) {
+        chart.selectAll('.chart__bar').classed('chart__bar_selected', false);
+        chart.selectAll('.chart__bar__' + week).classed('chart__bar_selected', true);
     };
 
     var drawUsersAndSalesGraph = function(selector, data) {
@@ -41,8 +48,7 @@
             width: 300,
             height: 150,
             xScaleHeight: 20,
-            xScaleLineHeight: 1,
-            topLineHeight: 1
+            xScaleLineHeight: 1
         };
 
         var chart = d3.select(selector)
@@ -58,17 +64,12 @@
             .range([options.height, 0])
             .domain([0, data.max.sales]);
 
-        drawBars(chart, options, data.weeks, data.sales, x, y, 'sales');
-        drawBars(chart, options, data.weeks, data.users, x, y, 'guests');
+        drawBars(chart, options, data, x, y, function(week) {
+            highlightWeek(chart, data, week);
+        });
 
         var xScaleLine = chart.append('g')
             .attr('transform', 'translate(0, ' + options.height + ')');
-
-        xScaleLine.append('rect')
-            .classed('chart__x-scale-line', true)
-            .attr('y', 0)
-            .attr('height', options.xScaleLineHeight)
-            .attr('width', options.width);
 
         xScaleLine.append('text')
             .classed('chart__x-scale-date', true)
@@ -82,6 +83,12 @@
             .attr('x', options.width)
             .attr('y', options.xScaleHeight)
             .text(getDayText(moment().week(data.max.week).isoWeekday(7)));
+
+        chart.on('mouseout', function() {
+            highlightLastWeek(chart, data);
+        });
+
+        highlightLastWeek(chart, data);
     };
 
     var setCounters = function(data, week) {
@@ -96,10 +103,17 @@
         d3.select('.placeholder__week-arpg').text('—'); // TODO: Change
     };
 
-    d3.json('/data/sales-and-guests.json', function(data) {
-        var week = data.weeks[data.weeks.length - 1];
-
+    var highlightWeek = function(chart, data, week) {
         setCounters(data, week);
+        setBarSelected(chart, week);
+    };
+
+    var highlightLastWeek = function(chart, data) {
+        var week = data.weeks[data.weeks.length - 1];
+        highlightWeek(chart, data, week);
+    };
+
+    d3.json('/data/sales-and-guests.json', function(data) {
         drawUsersAndSalesGraph('.chart__users-and-sales', data);
     });
 })();

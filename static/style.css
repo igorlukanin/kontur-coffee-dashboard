@@ -59,31 +59,33 @@ h1 {
 }
 
 .chart {
-    margin-top: 1em;
+    margin-top: 2em;
 }
 
 .chart__bar {
 
 }
 
-.chart__bar__top {
+.chart__bar_selected {
 
 }
 
 .chart__bar_sales {
     fill: #eee;
+    transition: fill 0.25s;
 }
 
-.chart__bar__top_sales {
-    fill: none;
+.chart__bar_selected .chart__bar_sales {
+    fill: #beeb9f;
 }
 
 .chart__bar_guests {
     fill: #ddd;
+    transition: fill 0.25s;
 }
 
-.chart__bar__top_guests {
-    fill: none;
+.chart__bar_selected .chart__bar_guests {
+    fill: #79bd8f;
 }
 
 .chart__x-scale-line {
