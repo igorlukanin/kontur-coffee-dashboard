@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const moment = require('moment');
+const Promise = require('bluebird');
 
 const db = require('./db');
 
@@ -62,7 +63,56 @@ const getSalesAndGuests = () => db.getSales().then(sales => {
     });
 });
 
+const getPenetrationAndAcquisition = () => Promise.all([
+    db.getOfficeWorkersCount(),
+    db.getOfficeSales()
+]).then(result => {
+    const officeWorkersCount = result[0];
+
+    const knownUsersSales = result[1].map(sale => {
+        sale.week = moment(sale.datetime).week();
+        return sale;
+    });
+
+    const groups = _.groupBy(knownUsersSales, 'week');
+
+    const data = {
+        penetration: groups,
+        acquisition: {}
+    };
+
+    let allUserNames = [];
+
+    for (let i in data.penetration) { if (data.penetration.hasOwnProperty(i)) {
+        const userNames = data.penetration[i].map(user => user.login);
+        const beforeCount = allUserNames.length;
+        allUserNames = _.union(allUserNames, userNames);
+        const afterCount = allUserNames.length;
+
+        data.penetration[i] = Math.round(allUserNames.length / officeWorkersCount * 100);
+        data.acquisition[i] = Math.round((afterCount - beforeCount) / officeWorkersCount * 100);
+    }}
+
+    const weeklyPenetration = _.chain(data.penetration).values();
+    const weeklyAcquisition = _.chain(data.acquisition).values();
+
+    return _.merge(data, {
+        min: {
+            penetration: weeklyPenetration.min(),
+            acquisition: weeklyAcquisition.min()
+        },
+        max: {
+            penetration: weeklyPenetration.max(),
+            acquisition: weeklyAcquisition.max()
+        },
+        officeWorkersCount
+    });
+});
+
+const compute = () => Promise.all([ getSalesAndGuests(), getPenetrationAndAcquisition() ])
+    .then(result => _.merge(result[0], result[1]));
+
 
 module.exports = {
-    getSalesAndGuests
+    compute
 };

@@ -18,9 +18,9 @@ express()
 
     .get('/', (req, res) => res.render('index'))
 
-    .get('/data/sales-and-guests.json', (req, res) => data.getSalesAndGuests()
+    .get('/data.json', (req, res) => data.compute()
         .then(data => res.json(data))
-        .catch(err => res.json(err)))
+        .catch(err => console.log(err)))
 
     .set('view engine', 'ect')
     .engine('ect', ect({

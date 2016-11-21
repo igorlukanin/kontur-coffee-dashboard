@@ -46,7 +46,7 @@
     var drawBarChart = function(selections, selection, data, maxValue, topValues, bottomValues) {
         var options = {
             width: 300,
-            height: 150,
+            height: 100,
             xScaleHeight: 20,
             xScaleLineHeight: 1
         };
@@ -90,26 +90,6 @@
         highlightLastWeek(selections, data);
     };
 
-    var drawBarCharts = function(selector1, selector2, data) {
-        var selections = [ d3.select(selector1), d3.select(selector2) ];
-
-        drawBarChart(selections, selections[0], data, function(data) {
-            return data.max.sales;
-        }, function(data) {
-            return data.sales;
-        }, function(data) {
-            return data.users;
-        });
-
-        drawBarChart(selections, selections[1], data, function(data) {
-            return data.max.arpg;
-        }, function(data) {
-            return data.arpg;
-        }, function(data) {
-            return data.arps;
-        });
-    };
-
     var setCounters = function(data, week) {
         d3.select('.placeholder__week-number').text(week);
         d3.select('.placeholder__week-days').text(getDaysText(week));
@@ -120,6 +100,10 @@
 
         d3.select('.placeholder__week-arps').text(data.arps[week]);
         d3.select('.placeholder__week-arpg').text(data.arpg[week]);
+
+        d3.select('.placeholder__week-penetration').text(data.penetration[week]);
+        d3.select('.placeholder__week-acquisition').text(data.acquisition[week]);
+        d3.select('.placeholder__week-office-population').text(data.officeWorkersCount);
     };
 
     var highlightWeek = function(selections, data, week) {
@@ -135,7 +119,34 @@
         highlightWeek(chart, data, week);
     };
 
-    d3.json('/data/sales-and-guests.json', function(data) {
-        drawBarCharts('.chart__users-and-sales', '.chart__arpg-and-arps', data);
+    var drawBarCharts = function(data, options) {
+        var selections = [];
+
+        options.map(function(option) {
+            option.selection = d3.select(option.selector);
+            selections.push(option.selection);
+            return option;
+        }).forEach(function(option) {
+            drawBarChart(selections, option.selection, data, option.max, option.top, option.bottom);
+        });
+    };
+
+    d3.json('/data.json', function(data) {
+        drawBarCharts(data, [{
+            selector: '.chart__users-and-sales',
+            max: function(data) { return data.max.sales; },
+            top: function(data) { return data.sales; },
+            bottom: function(data) { return data.users; }
+        }, {
+            selector: '.chart__arpg-and-arps',
+            max: function (data) { return data.max.arpg; },
+            top: function (data) { return data.arpg; },
+            bottom: function (data) { return data.arps; }
+        }, {
+            selector: '.chart__penetration-and-acquisition',
+            max: function (data) { return data.max.penetration; },
+            top: function (data) { return data.penetration; },
+            bottom: function (data) { return data.acquisition; }
+        }]);
     });
 })();
