@@ -104,6 +104,7 @@
         d3.select('.placeholder__week-penetration').text(data.penetration[week]);
         d3.select('.placeholder__week-acquisition').text(data.acquisition[week]);
         d3.select('.placeholder__week-office-population').text(data.officeWorkersCount);
+        d3.select('.placeholder__week-new-guests').text(data.acquiredGuests[week]);
     };
 
     var highlightWeek = function(selections, data, week) {

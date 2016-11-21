@@ -47,17 +47,11 @@ const getSalesAndGuests = () => db.getSales().then(sales => {
     return _.merge(data, {
         weeks: weeks.values(),
         min: {
-            week: weeks.first(),
-            sales: weeklySales.min(),
-            users: weeklyUsers.min(),
-            arps: weeklyArps.min(),
-            arpg: weeklyArpg.min()
+            week: weeks.first()
         },
         max: {
             week: weeks.last(),
             sales: weeklySales.max(),
-            users: weeklyUsers.max(),
-            arps: weeklyArps.max(),
             arpg: weeklyArpg.max()
         }
     });
@@ -78,7 +72,8 @@ const getPenetrationAndAcquisition = () => Promise.all([
 
     const data = {
         penetration: groups,
-        acquisition: {}
+        acquisition: {},
+        acquiredGuests: {}
     };
 
     let allUserNames = [];
@@ -90,20 +85,16 @@ const getPenetrationAndAcquisition = () => Promise.all([
         const afterCount = allUserNames.length;
 
         data.penetration[i] = Math.round(allUserNames.length / officeWorkersCount * 100);
-        data.acquisition[i] = Math.round((afterCount - beforeCount) / officeWorkersCount * 100);
+        data.acquiredGuests[i] = afterCount - beforeCount;
+        data.acquisition[i] = Math.round(data.acquiredGuests[i] / officeWorkersCount * 100);
     }}
 
     const weeklyPenetration = _.chain(data.penetration).values();
     const weeklyAcquisition = _.chain(data.acquisition).values();
 
     return _.merge(data, {
-        min: {
-            penetration: weeklyPenetration.min(),
-            acquisition: weeklyAcquisition.min()
-        },
         max: {
-            penetration: weeklyPenetration.max(),
-            acquisition: weeklyAcquisition.max()
+            penetration: weeklyPenetration.max()
         },
         officeWorkersCount
     });
