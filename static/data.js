@@ -100,6 +100,7 @@
 
         d3.select('.placeholder__week-arps').text(data.arps[week]);
         d3.select('.placeholder__week-arpg').text(data.arpg[week]);
+        d3.select('.placeholder__week-arpg-div-arps').text(Math.round(data.arpg[week] / data.arps[week] * 10) * 10);
 
         d3.select('.placeholder__week-penetration').text(data.penetration[week]);
         d3.select('.placeholder__week-acquisition').text(data.acquisition[week]);

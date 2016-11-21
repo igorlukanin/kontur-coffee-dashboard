@@ -104,5 +104,5 @@ h1 {
 }
 
 .sign:before {
-    content: '\2009';
+    content: '\2009\2009';
 }
