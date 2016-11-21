@@ -23,8 +23,8 @@ const getOfficeSales = () => connection.then(c =>
                 office: data('right')('officeItem')('town').add(', ').add(data('right')('officeItem')('title')),
                 name: data('right')('firstname').add(' ').add(data('right')('surname')),
                 login: data('right')('login'),
-                datetime: data('left')('datetime')
-            });
+                datetime: data('left')('datetime'),
+            })
         })
         .filter(r.row('office').eq('Екатеринбург, Малопрудная 5'))
         .pluck('name', 'login', 'datetime')

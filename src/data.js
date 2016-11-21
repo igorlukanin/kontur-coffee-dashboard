@@ -71,15 +71,18 @@ const getPenetrationAndAcquisition = () => Promise.all([
     const groups = _.groupBy(knownUsersSales, 'week');
 
     const data = {
-        penetration: groups,
+        penetration: {},
         acquisition: {},
-        acquiredGuests: {}
+        acquiredGuests: {},
+        retention: {},
+        churn: {}
     };
 
     let allUserNames = [];
 
-    for (let i in data.penetration) { if (data.penetration.hasOwnProperty(i)) {
-        const userNames = data.penetration[i].map(user => user.login);
+    for (let i in groups) { if (groups.hasOwnProperty(i)) {
+        const userNames = _.uniq(groups[i].map(user => user.login));
+
         const beforeCount = allUserNames.length;
         allUserNames = _.union(allUserNames, userNames);
         const afterCount = allUserNames.length;
@@ -87,14 +90,20 @@ const getPenetrationAndAcquisition = () => Promise.all([
         data.penetration[i] = Math.round(allUserNames.length / officeWorkersCount * 100);
         data.acquiredGuests[i] = afterCount - beforeCount;
         data.acquisition[i] = Math.round(data.acquiredGuests[i] / officeWorkersCount * 100);
+
+        data.retention[i] = Math.round((userNames.length - data.acquiredGuests[i]) / beforeCount * 100);
+        data.churn[i] = Math.round((beforeCount - (userNames.length - data.acquiredGuests[i])) / beforeCount * 100);
     }}
 
     const weeklyPenetration = _.chain(data.penetration).values();
-    const weeklyAcquisition = _.chain(data.acquisition).values();
+    const weeklyRetention = _.chain(data.retention).values();
+    const weeklyChurn = _.chain(data.churn).values();
 
     return _.merge(data, {
         max: {
-            penetration: weeklyPenetration.max()
+            penetration: weeklyPenetration.max(),
+            retention: weeklyRetention.max(),
+            churn: weeklyChurn.max()
         },
         officeWorkersCount
     });

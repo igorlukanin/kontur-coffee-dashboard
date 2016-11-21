@@ -106,6 +106,9 @@
         d3.select('.placeholder__week-acquisition').text(data.acquisition[week]);
         d3.select('.placeholder__week-office-population').text(data.officeWorkersCount);
         d3.select('.placeholder__week-new-guests').text(data.acquiredGuests[week]);
+
+        d3.select('.placeholder__week-retention').text(data.retention[week]);
+        d3.select('.placeholder__week-churn').text(data.churn[week]);
     };
 
     var highlightWeek = function(selections, data, week) {
@@ -149,6 +152,11 @@
             max: function (data) { return data.max.penetration; },
             top: function (data) { return data.penetration; },
             bottom: function (data) { return data.acquisition; }
+        }, {
+            selector: '.chart__retention-and-churn',
+            max: function (data) { return Math.max(data.max.churn, data.max.retention); },
+            top: function (data) { return data.churn; },
+            bottom: function (data) { return data.retention; }
         }]);
     });
 })();
