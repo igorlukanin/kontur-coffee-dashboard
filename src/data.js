@@ -112,7 +112,27 @@ const getPenetrationAndAcquisition = () => Promise.all([
 const compute = () => Promise.all([ getSalesAndGuests(), getPenetrationAndAcquisition() ])
     .then(result => _.merge(result[0], result[1]));
 
+const getNewGuestsByWeek = () => db.getOfficeSales().then(sales => {
+    const knownUsersSales = sales.map(sale => {
+        sale.week = moment(sale.datetime).week();
+        return sale;
+    });
+
+    const groups = _.groupBy(knownUsersSales, 'week');
+
+    let allUserNames = [];
+
+    for (let i in groups) { if (groups.hasOwnProperty(i)) {
+        groups[i] = _.uniq(groups[i].map(sale => sale.login.replace('kontur\\', '')));
+        groups[i] = _.without(groups[i], ...allUserNames).sort();
+        allUserNames = _.union(allUserNames, groups[i]);
+    }}
+
+    return groups;
+});
+
 
 module.exports = {
-    compute
+    compute,
+    getNewGuestsByWeek
 };

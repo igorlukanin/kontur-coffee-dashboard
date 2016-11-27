@@ -38,6 +38,10 @@ h1 {
 
 .counters {
     margin-top: 3em;
+
+.counters a {
+    color: inherit;
+}
 }
 
 .counters__counter {

@@ -22,6 +22,13 @@ express()
         .then(data => res.json(data))
         .catch(err => console.log(err)))
 
+    .get('/guests.json', (req, res) => data.getNewGuestsByWeek()
+        .then(data => {
+            res.setHeader('Content-Type', 'application/json');
+            return res.send(JSON.stringify(data, null, 2));
+        })
+        .catch(err => console.log(err)))
+
     .set('view engine', 'ect')
     .engine('ect', ect({
         watch: true,
