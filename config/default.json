@@ -1,4 +1,7 @@
 {
+  "staff": {
+    "delay_ms": 300  
+  },
   "rethinkdb": {
     "host": "localhost",
     "port": "28015",

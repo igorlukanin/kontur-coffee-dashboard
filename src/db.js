@@ -48,4 +48,5 @@ module.exports = {
     getSales,
     getOfficeSales,
     getOfficeWorkersCount
+    saveUser: upsertUser
 };
