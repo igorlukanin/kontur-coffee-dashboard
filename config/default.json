@@ -7,6 +7,11 @@
     "port": "28015",
     "db": "kontur_coffee"
   },
+  "data": {
+    "path": "data/",
+    "sales_xlsx_name": "sales.xlsx",
+    "source_path": "data/sales.csv"
+  },
   "website": {
     "port": 3090
   }

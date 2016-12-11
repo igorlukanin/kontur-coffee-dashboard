@@ -43,10 +43,21 @@ const getOfficeWorkersCount = () => connection.then(c =>
         .count()
         .run(c));
 
+const upsertUser = user => connection.then(c =>
+    r.table('users')
+        .insert(user, { conflict: 'update' })
+        .run(c));
+
+const upsertSales = sales => connection.then(c =>
+    r.table('sales')
+        .insert(sales, { conflict: 'update' })
+        .run(c));
+
 
 module.exports = {
     getSales,
     getOfficeSales,
-    getOfficeWorkersCount
-    saveUser: upsertUser
+    getOfficeWorkersCount,
+    saveUser: upsertUser,
+    saveSales: upsertSales
 };

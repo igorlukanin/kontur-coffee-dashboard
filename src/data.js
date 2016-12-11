@@ -40,8 +40,6 @@ const getSalesAndGuests = () => db.getSales().then(sales => {
 
     const weeks = _.chain(data.sales).keys();
     const weeklySales = _.chain(data.sales).values();
-    const weeklyUsers = _.chain(data.users).values();
-    const weeklyArps = _.chain(data.arps).values();
     const weeklyArpg = _.chain(data.arpg).values();
 
     return _.merge(data, {

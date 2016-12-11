@@ -114,6 +114,67 @@
             </div>
         </div>
 
+        <div class="form">
+            <a href="#" class="form_upload__link">Upload a sales data file</a>
+
+            <div class="spinner spinner_hidden form_upload__spinner">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+
+            <div class="form_upload">
+                <input class="form_upload__file" type="file" name="file"/>
+            </div>
+        </div>
+
         <script src="/data.js"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                updateData();
+
+                var showSpinner = function() {
+                    var spinner = document.querySelector('.form_upload__spinner');
+                    spinner.className = "spinner form_upload__spinner";
+                };
+
+                var hideSpinner = function() {
+                    var spinner = document.querySelector('.form_upload__spinner');
+                    spinner.className = "spinner spinner_hidden form_upload__spinner";
+                };
+
+                document.querySelector('.form_upload__link').onclick = function() {
+                    var file = document.querySelector('.form_upload__file');
+                    file.click();
+
+                    file.onchange = function(e) {
+                        var files = e.target.files || e.dataTransfer.files,
+                            file = files[0];
+
+                        if (file) {
+                            var data = new FormData();
+                            data.append('file', file, file.name);
+
+                            var request = new XMLHttpRequest();
+                            request.open('POST', '', true);
+                            request.send(data);
+
+                            showSpinner();
+
+                            request.onreadystatechange = function() {
+                                hideSpinner();
+
+                                if (request.readyState == 4 && request.status == 200) {
+                                    updateData();
+                                }
+                            };
+                        }
+                    };
+
+                    return false;
+                };
+            });
+        </script>
     </body>
 </html>

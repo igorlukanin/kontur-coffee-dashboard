@@ -1,3 +1,5 @@
+var updateData;
+
 (function() {
     var getDayText = function(moment) {
         return moment.format('MMM D');
@@ -25,13 +27,13 @@
                 });
 
             bar.append('rect')
-                .classed('chart__bar_sales', true)
+                .classed('chart__bar_one', true)
                 .attr('y', function(d) { return yScale(topValues(data)[week]); })
                 .attr('height', function(d) { return options.height - yScale(topValues(data)[week]); })
                 .attr('width', barWidth);
 
             bar.append('rect')
-                .classed('chart__bar_guests', true)
+                .classed('chart__bar_two', true)
                 .attr('y', function(d) { return yScale(bottomValues(data)[week]); })
                 .attr('height', function(d) { return options.height - yScale(bottomValues(data)[week]); })
                 .attr('width', barWidth);
@@ -51,7 +53,9 @@
             xScaleLineHeight: 1
         };
 
-        var chart = selection.append('svg')
+        var chart = selection
+            .html('')
+            .append('svg')
             .attr('width', options.width)
             .attr('height', options.height + options.xScaleHeight);
 
@@ -74,14 +78,14 @@
             .classed('chart__x-scale-date', true)
             .attr('x', 0)
             .attr('y', options.xScaleHeight)
-            .text(getDayText(moment().week(data.min.week).isoWeekday(1)));
+            .text(getDayText(moment().week(data.min.week).weekday(1)));
 
         xScaleLine.append('text')
             .classed('chart__x-scale-date', true)
             .attr('text-anchor', 'end')
             .attr('x', options.width)
             .attr('y', options.xScaleHeight)
-            .text(getDayText(moment().week(data.max.week).isoWeekday(7)));
+            .text(getDayText(moment().week(data.max.week).weekday(7)));
 
         chart.on('mouseout', function() {
             highlightLastWeek(selections, data);
@@ -136,27 +140,29 @@
         });
     };
 
-    d3.json('/data.json', function(data) {
-        drawBarCharts(data, [{
-            selector: '.chart__users-and-sales',
-            max: function(data) { return data.max.sales; },
-            top: function(data) { return data.sales; },
-            bottom: function(data) { return data.users; }
-        }, {
-            selector: '.chart__arpg-and-arps',
-            max: function (data) { return data.max.arpg; },
-            top: function (data) { return data.arpg; },
-            bottom: function (data) { return data.arps; }
-        }, {
-            selector: '.chart__penetration-and-acquisition',
-            max: function (data) { return data.max.penetration; },
-            top: function (data) { return data.penetration; },
-            bottom: function (data) { return data.acquisition; }
-        }, {
-            selector: '.chart__retention-and-churn',
-            max: function (data) { return Math.max(data.max.churn, data.max.retention); },
-            top: function (data) { return data.churn; },
-            bottom: function (data) { return data.retention; }
-        }]);
-    });
+    updateData = function() {
+        d3.json('/data.json', function(data) {
+            drawBarCharts(data, [{
+                selector: '.chart__users-and-sales',
+                max: function(data) { return data.max.sales; },
+                top: function(data) { return data.sales; },
+                bottom: function(data) { return data.users; }
+            }, {
+                selector: '.chart__arpg-and-arps',
+                max: function (data) { return data.max.arpg; },
+                top: function (data) { return data.arpg; },
+                bottom: function (data) { return data.arps; }
+            }, {
+                selector: '.chart__penetration-and-acquisition',
+                max: function (data) { return data.max.penetration; },
+                top: function (data) { return data.penetration; },
+                bottom: function (data) { return data.acquisition; }
+            }, {
+                selector: '.chart__retention-and-churn',
+                max: function (data) { return Math.max(data.max.churn, data.max.retention); },
+                top: function (data) { return data.churn; },
+                bottom: function (data) { return data.retention; }
+            }]);
+        });
+    };
 })();
