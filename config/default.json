@@ -1,4 +1,7 @@
 {
+  "crawler": {
+    "restart_interval_ms": 36000000
+  },
   "staff": {
     "delay_ms": 300  
   },
