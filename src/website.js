@@ -24,8 +24,11 @@ express()
 
     .get('/guests.json', (req, res) => data.getNewGuestsByWeek()
         .then(data => {
+            const weeks = Object.keys(data);
+            const lastWeek = weeks[weeks.length - 1];
+
             res.setHeader('Content-Type', 'application/json');
-            return res.send(JSON.stringify(data, null, 2));
+            return res.send(JSON.stringify(data[lastWeek], null, 2));
         })
         .catch(err => console.log(err)))
 
