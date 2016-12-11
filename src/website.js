@@ -38,8 +38,15 @@ express()
             const weeks = Object.keys(data);
             const lastWeek = weeks[weeks.length - 1];
 
+            const selectedData = {};
+            selectedData[lastWeek] = data[lastWeek];
+
+            if (data[lastWeek - 1] !== undefined) {
+                selectedData[lastWeek - 1] = data[lastWeek - 1];
+            }
+
             res.setHeader('Content-Type', 'application/json');
-            return res.send(JSON.stringify(data[lastWeek], null, 2));
+            return res.send(JSON.stringify(selectedData, null, 2));
         })
         .catch(err => console.log(err)))
 
