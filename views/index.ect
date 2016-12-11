@@ -159,7 +159,7 @@
                             data.append('file', file, file.name);
 
                             var request = new XMLHttpRequest();
-                            request.open('POST', '', true);
+                            request.open('POST', '/upload.json', true);
                             request.send(data);
 
                             showSpinner();

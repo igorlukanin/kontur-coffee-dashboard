@@ -57,7 +57,7 @@ express()
         })
         .catch(err => console.log(err)))
 
-    .post('/', upload.single('file'), (req, res) => {
+    .post('/upload.json', upload.single('file'), (req, res) => {
         return req.file
             ? loader.loadSalesFile()
                 .then(() => res.json({ success: true }))
