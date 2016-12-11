@@ -111,6 +111,18 @@ h1 {
     fill: #bbb;
 }
 
+.chart__bar__text {
+    fill: #aaa;
+
+    font-size: 10pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.chart__bar_selected .chart__bar__text {
+    fill: #fff;
+}
+
 .chart__x-scale-line {
     fill: #ccc;
 }

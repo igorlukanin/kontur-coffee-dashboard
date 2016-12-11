@@ -14,7 +14,7 @@ var updateData;
             : getDayText(startOfWeek) + '—' + getDayText(endOfWeek);
     };
 
-    var drawBars = function(chart, options, data, xScale, yScale, topValues, bottomValues, hoverHandler) {
+    var drawBars = function(chart, options, data, xScale, yScale, topValues, bottomValues, daysValues, hoverHandler) {
         var barWidth = xScale(data.weeks[1]) - xScale(data.weeks[0]);
 
         data.weeks.forEach(week => {
@@ -37,6 +37,17 @@ var updateData;
                 .attr('y', function(d) { return yScale(bottomValues(data)[week]); })
                 .attr('height', function(d) { return options.height - yScale(bottomValues(data)[week]); })
                 .attr('width', barWidth);
+
+            var workDays = daysValues(data)[week];
+
+            if (workDays != options.usualWorkDays) {
+                bar.append('text')
+                    .classed('chart__bar__text', true)
+                    .attr('text-anchor', 'middle')
+                    .attr('x', barWidth * 0.5)
+                    .attr('y', options.height * 0.94)
+                    .text(workDays);
+            }
         });
     };
 
@@ -45,12 +56,13 @@ var updateData;
         chart.selectAll('.chart__bar__' + week).classed('chart__bar_selected', true);
     };
 
-    var drawBarChart = function(selections, selection, data, maxValue, topValues, bottomValues) {
+    var drawBarChart = function(selections, selection, data, maxValue, topValues, bottomValues, daysValues) {
         var options = {
             width: 300,
             height: 100,
             xScaleHeight: 20,
-            xScaleLineHeight: 1
+            xScaleLineHeight: 1,
+            usualWorkDays: 5
         };
 
         var chart = selection
@@ -67,7 +79,7 @@ var updateData;
             .range([options.height, 0])
             .domain([0, maxValue(data)]);
 
-        drawBars(chart, options, data, x, y, topValues, bottomValues, function(week) {
+        drawBars(chart, options, data, x, y, topValues, bottomValues, daysValues, function(week) {
             highlightWeek(selections, data, week);
         });
 
@@ -136,7 +148,7 @@ var updateData;
             selections.push(option.selection);
             return option;
         }).forEach(function(option) {
-            drawBarChart(selections, option.selection, data, option.max, option.top, option.bottom);
+            drawBarChart(selections, option.selection, data, option.max, option.top, option.bottom, option.day);
         });
     };
 
@@ -146,22 +158,26 @@ var updateData;
                 selector: '.chart__users-and-sales',
                 max: function(data) { return data.max.sales; },
                 top: function(data) { return data.sales; },
-                bottom: function(data) { return data.users; }
+                bottom: function(data) { return data.users; },
+                day: function(data) { return data.workDays; }
             }, {
                 selector: '.chart__arpg-and-arps',
                 max: function (data) { return data.max.arpg; },
                 top: function (data) { return data.arpg; },
-                bottom: function (data) { return data.arps; }
+                bottom: function (data) { return data.arps; },
+                day: function(data) { return data.workDays; }
             }, {
                 selector: '.chart__penetration-and-acquisition',
                 max: function (data) { return data.max.penetration; },
                 top: function (data) { return data.penetration; },
-                bottom: function (data) { return data.acquisition; }
+                bottom: function (data) { return data.acquisition; },
+                day: function(data) { return data.workDays; }
             }, {
                 selector: '.chart__retention-and-churn',
                 max: function (data) { return Math.max(data.max.churn, data.max.retention); },
                 top: function (data) { return data.churn; },
-                bottom: function (data) { return data.retention; }
+                bottom: function (data) { return data.retention; },
+                day: function(data) { return data.workDays; }
             }]);
         });
     };

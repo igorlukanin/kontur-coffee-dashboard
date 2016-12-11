@@ -18,11 +18,14 @@ const getSalesAndGuests = () => db.getSales().then(sales => {
     const knownUsersSales = groupedSales[false];
     const anonymousSales = groupedSales[true];
 
+    const groupedSales2 = _.groupBy(allSales, 'week');
+
     const data = {
         sales: _.countBy(allSales, 'week'),
         anonymousSales: _.countBy(anonymousSales, 'week'),
         users: _.groupBy(knownUsersSales, 'week'),
-        arps: _.groupBy(allSales, 'week'),
+        workDays: {},
+        arps: groupedSales2,
         arpg: _.groupBy(knownUsersSales, 'week')
     };
 
@@ -31,6 +34,10 @@ const getSalesAndGuests = () => db.getSales().then(sales => {
     }}
 
     for (let i in data.arps) { if (data.arps.hasOwnProperty(i)) {
+        data.workDays[i] = Object.keys(_.countBy(data.arps[i], function(sale) {
+            return moment(sale.datetime).day();
+        })).length;
+
         data.arps[i] = Math.round(_.sumBy(data.arps[i], 'sum') / data.sales[i]);
     }}
 
