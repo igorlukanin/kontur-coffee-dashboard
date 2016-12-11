@@ -33,6 +33,13 @@ express()
         .then(data => res.json(data))
         .catch(err => console.log(err)))
 
+    .get('/status.json', (req, res) => data.getStatus()
+        .then(data => {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify(data, null, 2));
+        })
+        .catch(err => console.log(err)))
+
     .get('/guests.json', (req, res) => data.getNewGuestsByWeek()
         .then(data => {
             const weeks = Object.keys(data);

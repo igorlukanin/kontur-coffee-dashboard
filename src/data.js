@@ -136,8 +136,15 @@ const getNewGuestsByWeek = () => db.getOfficeSales().then(sales => {
     return groups;
 });
 
+const getStatus = () => Promise.all([ db.getLastUserDate(), db.getLastSaleDate() ])
+    .then(result => ({
+        'last_user_date': moment(result[0]).toString(),
+        'last_sale_date': moment(result[1]).toString()
+    }));
+
 
 module.exports = {
     compute,
-    getNewGuestsByWeek
+    getNewGuestsByWeek,
+    getStatus
 };
