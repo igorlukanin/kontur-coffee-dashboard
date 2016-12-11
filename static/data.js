@@ -6,8 +6,8 @@ var updateData;
     };
 
     var getDaysText = function(week) {
-        var startOfWeek = moment().week(week).isoWeekday(1);
-        var endOfWeek = moment().week(week).isoWeekday(7);
+        var startOfWeek = moment().week(week).weekday(1);
+        var endOfWeek = moment().week(week).weekday(7);
 
         return startOfWeek.month() == endOfWeek.month()
             ? getDayText(startOfWeek) + '–' + endOfWeek.format('D')
