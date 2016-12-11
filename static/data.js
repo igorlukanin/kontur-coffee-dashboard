@@ -14,6 +14,10 @@ var updateData;
             : getDayText(startOfWeek) + '—' + getDayText(endOfWeek);
     };
 
+    var getDaysCountText = function(days) {
+        return days + ' workday' + (days > 1 ? 's' : '');
+    };
+
     var drawBars = function(chart, options, data, xScale, yScale, topValues, bottomValues, daysValues, hoverHandler) {
         var barWidth = xScale(data.weeks[1]) - xScale(data.weeks[0]);
 
@@ -109,6 +113,7 @@ var updateData;
     var setCounters = function(data, week) {
         d3.select('.placeholder__week-number').text(week);
         d3.select('.placeholder__week-days').text(getDaysText(week));
+        d3.select('.placeholder__week-days-count').text(getDaysCountText(data.workDays[week]));
 
         d3.select('.placeholder__week-sales').text(data.sales[week]);
         d3.select('.placeholder__week-sales-anonymous').text(data.anonymousSales[week]);
