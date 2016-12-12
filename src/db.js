@@ -22,10 +22,44 @@ const getOfficeSales = () => connection.then(c => r.table('sales')
             name: data('right')('firstname').add(' ').add(data('right')('surname')),
             login: data('right')('login'),
             datetime: data('left')('datetime'),
+            room: r.branch(
+                data('right').hasFields({ location: ['zoneName'] }),
+                data('right')('location')('zoneName').split(' ').nth(0),
+                r.branch(
+                    r.and(
+                        data('right').hasFields({ location: ['roomTitle'] }),
+                        data('right')('location')('roomTitle').eq('').not()),
+                    data('right')('location')('roomTitle').split(' ').nth(0),
+                    data('right')('room').split(' ').nth(0))),
         })
     })
     .filter(r.row('office').eq('Екатеринбург, Малопрудная 5'))
-    .pluck('name', 'login', 'datetime')
+    .pluck('name', 'login', 'datetime', 'room')
+    .run(c)
+    .then(cursor => cursor.toArray()));
+
+const getOfficeRooms = () => connection.then(c => r.table('users')
+    .filter(r.or(
+        r.row.hasFields('room'),
+        r.row.hasFields('location')))
+    .map(function(data) {
+        return data.merge({
+            office: data('officeItem')('town').add(', ').add(data('officeItem')('title')),
+            room: r.branch(
+                data.hasFields({ location: ['zoneName'] }),
+                data('location')('zoneName').split(' ').nth(0),
+                r.branch(
+                    r.and(
+                        data.hasFields({ location: ['roomTitle'] }),
+                        data('location')('roomTitle').eq('').not()),
+                    data('location')('roomTitle').split(' ').nth(0),
+                    data('room').split(' ').nth(0))),
+        })
+    })
+    .filter(r.row('office').eq('Екатеринбург, Малопрудная 5'))
+    .filter(r.row('room').eq('').not())
+    .group(r.row('room'))
+    .count()
     .run(c)
     .then(cursor => cursor.toArray()));
 
@@ -66,6 +100,7 @@ const upsertSales = sales => connection.then(c => r.table('sales')
 module.exports = {
     getSales,
     getOfficeSales,
+    getOfficeRooms,
     getOfficeWorkersCount,
     getLastSaleDate,
     getLastUserDate,

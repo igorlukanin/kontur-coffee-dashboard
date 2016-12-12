@@ -130,6 +130,10 @@ var updateData;
 
         d3.select('.placeholder__week-retention').text(data.retention[week]);
         d3.select('.placeholder__week-churn').text(data.churn[week]);
+
+        d3.select('.placeholder__week-room-pollination').text(data.pollination[week]);
+        d3.select('.placeholder__week-rooms').text(data.rooms[week]);
+        d3.select('.placeholder__office-rooms-count').text(data.officeRoomsCount);
     };
 
     var highlightWeek = function(selections, data, week) {
@@ -182,6 +186,12 @@ var updateData;
                 max: function (data) { return Math.max(data.max.churn, data.max.retention); },
                 top: function (data) { return data.churn; },
                 bottom: function (data) { return data.retention; },
+                day: function(data) { return data.workDays; }
+            }, {
+                selector: '.chart__room-pollination',
+                max: function (data) { return data.max.rooms; },
+                top: function (data) { return data.rooms; },
+                bottom: function (data) { return data.pollination; },
                 day: function(data) { return data.workDays; }
             }]);
         });

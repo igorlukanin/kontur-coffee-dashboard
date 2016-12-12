@@ -62,9 +62,18 @@ const getSalesAndGuests = () => db.getSales().then(sales => {
     });
 });
 
+const calculatePollination = (weeklyRooms, rooms, w) => {
+    const v = Object.keys(rooms)
+        .map(i => (weeklyRooms[rooms[i].group] || 0) / rooms[i].reduction)
+        .filter(i => i > 0);
+
+    return Math.round(100 * _.mean(v));
+};
+
 const getPenetrationAndAcquisition = () => Promise.all([
     db.getOfficeWorkersCount(),
-    db.getOfficeSales()
+    db.getOfficeSales(),
+    db.getOfficeRooms()
 ]).then(result => {
     const officeWorkersCount = result[0];
 
@@ -80,10 +89,15 @@ const getPenetrationAndAcquisition = () => Promise.all([
         acquisition: {},
         acquiredGuests: {},
         retention: {},
-        churn: {}
+        churn: {},
+        rooms: {},
+        pollination: {}
     };
 
     let allUserNames = [];
+
+    const rooms = result[2];
+    const officeRoomsCount = rooms.length;
 
     for (let i in groups) { if (groups.hasOwnProperty(i)) {
         const userNames = _.uniq(groups[i].map(user => user.login));
@@ -98,19 +112,26 @@ const getPenetrationAndAcquisition = () => Promise.all([
 
         data.retention[i] = Math.round((userNames.length - data.acquiredGuests[i]) / beforeCount * 100);
         data.churn[i] = Math.round((beforeCount - (userNames.length - data.acquiredGuests[i])) / beforeCount * 100);
+
+        const weeklyRooms = _.countBy(_.uniqBy(groups[i], 'login').map(sale => sale.room));
+        data.rooms[i] = Math.round(100 * Object.keys(weeklyRooms).length / officeRoomsCount);
+        data.pollination[i] = calculatePollination(weeklyRooms, rooms, i);
     }}
 
     const weeklyPenetration = _.chain(data.penetration).values();
     const weeklyRetention = _.chain(data.retention).values();
     const weeklyChurn = _.chain(data.churn).values();
+    const weeklyRooms = _.chain(data.rooms).values();
 
     return _.merge(data, {
         max: {
             penetration: weeklyPenetration.max(),
             retention: weeklyRetention.max(),
-            churn: weeklyChurn.max()
+            churn: weeklyChurn.max(),
+            rooms: weeklyRooms.max()
         },
-        officeWorkersCount
+        officeWorkersCount,
+        officeRoomsCount
     });
 });
 
