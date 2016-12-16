@@ -17,6 +17,7 @@
     "crawler": "NODE_ENV=production node src/crawler.js",
     "crawler-ctrl": "NODE_ENV=production node src/crawler-ctrl.js",
     "loader": "NODE_ENV=production node src/loader.js",
+    "loader-ctrl": "NODE_ENV=production node src/loader-ctrl.js",
     "website": "NODE_ENV=production node src/website.js"
   }
 }
