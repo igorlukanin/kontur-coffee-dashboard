@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=PT+Sans');
 
 body {
-    margin: 50px 150px;
+    margin: 5vw 10vw;
     font-family: 'PT Sans', 'Helvetica Neue', sans-serif;
 }
 
@@ -34,6 +34,10 @@ h1 {
     width: 35vw;
 
     vertical-align: top;
+}
+
+.columns__column:first-child {
+    margin-right: 5em;
 }
 
 .counters {
@@ -150,67 +154,4 @@ h1 {
 
     opacity: 0.25;
     transition: opacity 0.5s;
-}
-
-.form a {
-    color: inherit;
-    margin-right: 1em;
-}
-
-.form:hover {
-    opacity: 1;
-    transition: opacity 0.5s;
-}
-
-.form_upload {
-    visibility: hidden;
-}
-
-
-/* Spinner animation via http://tobiasahlin.com/spinkit/ */
-
-.spinner {
-    display: inline-block;
-    margin-left: 1em;
-    text-align: center;
-}
-
-.spinner_hidden {
-    display: none;
-}
-
-.spinner > div {
-    width: 6px;
-    height: 6px;
-    background-color: #333;
-
-    border-radius: 100%;
-    display: inline-block;
-    -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-    animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-}
-
-.spinner .bounce1 {
-    -webkit-animation-delay: -0.32s;
-    animation-delay: -0.32s;
-}
-
-.spinner .bounce2 {
-    -webkit-animation-delay: -0.16s;
-    animation-delay: -0.16s;
-}
-
-@-webkit-keyframes sk-bouncedelay {
-    0%, 80%, 100% { -webkit-transform: scale(0) }
-    40% { -webkit-transform: scale(1.0) }
-}
-
-@keyframes sk-bouncedelay {
-    0%, 80%, 100% {
-        -webkit-transform: scale(0);
-        transform: scale(0);
-    } 40% {
-          -webkit-transform: scale(1.0);
-          transform: scale(1.0);
-      }
 }
