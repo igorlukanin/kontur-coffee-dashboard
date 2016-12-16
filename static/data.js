@@ -162,37 +162,39 @@ var updateData;
 
     updateData = function() {
         d3.json('/data.json', function(data) {
-            drawBarCharts(data, [{
-                selector: '.chart__users-and-sales',
-                max: function(data) { return data.max.sales; },
-                top: function(data, week) { return data.sales[week]; },
-                bottom: function(data, week) { return data.users[week]; },
-                day: function(data, week) { return data.workDays[week]; }
-            }, {
-                selector: '.chart__arpg-and-arps',
-                max: function(data) { return data.max.arpg; },
-                top: function(data, week) { return data.arpg[week]; },
-                bottom: function(data, week) { return data.arps[week]; },
-                day: function(data, week) { return data.workDays[week]; }
-            }, {
-                selector: '.chart__penetration-and-acquisition',
-                max: function(data) { return data.max.penetration; },
-                top: function(data, week) { return data.penetration[week]; },
-                bottom: function(data, week) { return data.acquisition[week]; },
-                day: function(data, week) { return data.workDays[week]; }
-            }, {
-                selector: '.chart__retention',
-                max: function(data) { return data.max.retention; },
-                top: function(data, week) { return data.retention[week]; },
-                bottom: function(data, week) { return 0; },
-                day: function(data, week) { return data.workDays[week]; }
-            }, {
-                selector: '.chart__room-pollination',
-                max: function(data) { return data.max.rooms; },
-                top: function(data, week) { return data.rooms[week]; },
-                bottom: function(data, week) { return data.pollination[week]; },
-                day: function(data, week) { return data.workDays[week]; }
-            }]);
+            if (data) {
+                drawBarCharts(data, [{
+                    selector: '.chart__users-and-sales',
+                    max: function(data) { return data.max.sales; },
+                    top: function(data, week) { return data.sales[week]; },
+                    bottom: function(data, week) { return data.users[week]; },
+                    day: function(data, week) { return data.workDays[week]; }
+                }, {
+                    selector: '.chart__arpg-and-arps',
+                    max: function(data) { return data.max.arpg; },
+                    top: function(data, week) { return data.arpg[week]; },
+                    bottom: function(data, week) { return data.arps[week]; },
+                    day: function(data, week) { return data.workDays[week]; }
+                }, {
+                    selector: '.chart__penetration-and-acquisition',
+                    max: function(data) { return data.max.penetration; },
+                    top: function(data, week) { return data.penetration[week]; },
+                    bottom: function(data, week) { return data.acquisition[week]; },
+                    day: function(data, week) { return data.workDays[week]; }
+                }, {
+                    selector: '.chart__retention',
+                    max: function(data) { return data.max.retention; },
+                    top: function(data, week) { return data.retention[week]; },
+                    bottom: function(data, week) { return 0; },
+                    day: function(data, week) { return data.workDays[week]; }
+                }, {
+                    selector: '.chart__room-pollination',
+                    max: function(data) { return data.max.rooms; },
+                    top: function(data, week) { return data.rooms[week]; },
+                    bottom: function(data, week) { return data.pollination[week]; },
+                    day: function(data, week) { return data.workDays[week]; }
+                }]);
+            };
         });
     };
 })();
