@@ -62,7 +62,7 @@ var updateData;
 
     var drawBarChart = function(selections, selection, data, maxValue, topValues, bottomValues, daysValues) {
         var options = {
-            width: 400,
+            width: 375,
             height: 140,
             xScaleHeight: 20,
             xScaleLineHeight: 1,
