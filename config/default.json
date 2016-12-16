@@ -2,18 +2,25 @@
   "crawler": {
     "restart_interval_ms": 36000000
   },
+    "loader": {
+      "restart_interval_ms": 60000
+    },
   "staff": {
-    "delay_ms": 300  
+    "delay_ms": 300,
+    "client_id": "",
+    "client_secret": "",
+    "username": "",
+    "password": ""
+  },
+  "poster": {
+    "client_id": "",
+    "client_secret": "",
+    "start_date": ""
   },
   "rethinkdb": {
     "host": "localhost",
     "port": "28015",
     "db": "kontur_coffee"
-  },
-  "data": {
-    "path": "data/",
-    "sales_xlsx_name": "sales.xlsx",
-    "source_path": "data/sales.csv"
   },
   "website": {
     "port": 3090

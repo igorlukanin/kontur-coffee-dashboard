@@ -2,22 +2,11 @@ const compression = require('compression');
 const config = require('config');
 const ect = require('ect');
 const express = require('express');
-const multer  = require('multer');
 const Promise = require('bluebird');
 
 const data = require('./data');
-const loader = require('./loader');
 
-const dataPath = config.get('data.path');
-const dataFileName = config.get('data.sales_xlsx_name');
 const port = config.get('website.port');
-
-const upload = multer({
-    storage: multer.diskStorage({
-        destination: (req, file, cb) => cb(null, dataPath),
-        filename: (req, file, cb) => cb(null, dataFileName)
-    })
-});
 
 
 express()
@@ -56,17 +45,6 @@ express()
             return res.send(JSON.stringify(selectedData, null, 2));
         })
         .catch(err => console.log(err)))
-
-    .post('/upload.json', upload.single('file'), (req, res) => {
-        return req.file
-            ? loader.loadSalesFile()
-                .then(() => res.json({ success: true }))
-                .catch(e => {
-                    console.log(e);
-                    return res.json({ error: 'Failed to load sales' });
-                })
-            : res.json({ error: 'Failed to upload file' });
-    })
 
     .set('view engine', 'ect')
     .engine('ect', ect({

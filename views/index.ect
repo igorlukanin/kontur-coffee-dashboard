@@ -145,66 +145,12 @@
 
         <div class="form">
             <a href="/status.json" target="_blank">Check data status</a>
-            <a href="#" class="form_upload__link">Upload a sales data file</a>
-
-            <div class="spinner spinner_hidden form_upload__spinner">
-              <div class="bounce1"></div>
-              <div class="bounce2"></div>
-              <div class="bounce3"></div>
-            </div>
-
-            <div class="form_upload">
-                <input class="form_upload__file" type="file" name="file"/>
-            </div>
         </div>
 
         <script src="/data.js"></script>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                updateData();
-
-                var showSpinner = function() {
-                    var spinner = document.querySelector('.form_upload__spinner');
-                    spinner.className = "spinner form_upload__spinner";
-                };
-
-                var hideSpinner = function() {
-                    var spinner = document.querySelector('.form_upload__spinner');
-                    spinner.className = "spinner spinner_hidden form_upload__spinner";
-                };
-
-                document.querySelector('.form_upload__link').onclick = function() {
-                    var file = document.querySelector('.form_upload__file');
-                    file.click();
-
-                    file.onchange = function(e) {
-                        var files = e.target.files || e.dataTransfer.files,
-                            file = files[0];
-
-                        if (file) {
-                            var data = new FormData();
-                            data.append('file', file, file.name);
-
-                            var request = new XMLHttpRequest();
-                            request.open('POST', '/upload.json', true);
-                            request.send(data);
-
-                            showSpinner();
-
-                            request.onreadystatechange = function() {
-                                hideSpinner();
-
-                                if (request.readyState == 4 && request.status == 200) {
-                                    updateData();
-                                }
-                            };
-                        }
-                    };
-
-                    return false;
-                };
-            });
+            document.addEventListener('DOMContentLoaded', updateData);
         </script>
 
         <!-- Yandex.Metrika counter --> <script type="text/javascript"> (function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter41551394 = new Ya.Metrika({ id:41551394, clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true }); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = "https://mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks"); </script> <noscript><div><img src="https://mc.yandex.ru/watch/41551394" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->

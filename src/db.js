@@ -9,12 +9,16 @@ const connection = r.connect({
 
 
 const getSales = () => connection.then(c => r.table('sales')
+    .filter(r.row('status').eq('2'))
     .pluck('client_personnel_number', 'sum', 'datetime')
     .run(c)
     .then(cursor => cursor.toArray()));
 
 const getOfficeSales = () => connection.then(c => r.table('sales')
-    .filter(r.row('client_personnel_number').eq('').not())
+    .filter(r.and(
+        r.row('status').eq('2'),
+        r.row('client_personnel_number').eq('').not()
+    ))
     .eqJoin(r.row('client_personnel_number'), r.table('users'), { index: 'employeeCode' })
     .map(function(data) {
         return data.merge({

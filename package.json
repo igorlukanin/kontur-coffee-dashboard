@@ -8,14 +8,10 @@
     "d3": "^4.3.0",
     "ect": "^0.5.9",
     "express": "^4.14.0",
-    "honesthash": "^0.1.10",
     "lodash": "^4.17.2",
     "moment": "^2.16.0",
-    "multer": "^1.2.0",
     "request": "^2.79.0",
-    "rethinkdb": "^2.3.3",
-    "xlsx": "^0.8.0",
-    "ya-csv": "^0.10.1"
+    "rethinkdb": "^2.3.3"
   },
   "scripts": {
     "crawler": "NODE_ENV=production node src/crawler.js",
