@@ -1,20 +1,19 @@
 @import url('https://fonts.googleapis.com/css?family=PT+Sans');
 
 body {
-    margin: 5vw 10vw;
+    margin: 5vw 10vw 10vw;
     font-family: 'PT Sans', 'Helvetica Neue', sans-serif;
 }
 
 h1 {
     font-weight: inherit;
-    margin-bottom: 0;
+    margin-bottom: 0.25em;
 }
 
 .week-header {
     color: #666;
     font-size: 11pt;
     letter-spacing: 0.15em;
-    line-height: 3em;
     text-transform: uppercase;
 }
 
@@ -87,8 +86,8 @@ h1 {
 }
 
 .chart {
-    margin: 2em 0;
-    height: 100px;
+    margin: 1em 0;
+    height: 140px;
 }
 
 .chart__bar {
@@ -161,13 +160,4 @@ h1 {
 
 .sign:before {
     content: '\2009\2009';
-}
-
-.form {
-    margin-top: 6em;
-
-    font-size: 10pt;
-
-    opacity: 0.25;
-    transition: opacity 0.5s;
 }

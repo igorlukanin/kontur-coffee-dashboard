@@ -62,8 +62,8 @@ var updateData;
 
     var drawBarChart = function(selections, selection, data, maxValue, topValues, bottomValues, daysValues) {
         var options = {
-            width: 325,
-            height: 120,
+            width: 400,
+            height: 140,
             xScaleHeight: 20,
             xScaleLineHeight: 1,
             usualWorkDays: 5
