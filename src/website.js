@@ -7,6 +7,21 @@ const Promise = require('bluebird');
 const data = require('./data');
 
 const port = config.get('website.port');
+const dataCacheIntervalMs = config.get('website.data_cache_interval_ms');
+
+
+let cachedData = data.compute();
+let cacheUpdateDate = new Date();
+
+const getData = () => new Promise(resolve => {
+    resolve(cachedData);
+
+    if (new Date().getTime() - cacheUpdateDate.getTime() > dataCacheIntervalMs) {
+        data.compute().then(data => {
+            cachedData = Promise.resolve(data);
+        });
+    }
+});
 
 
 express()
@@ -18,7 +33,7 @@ express()
 
     .get('/', (req, res) => res.render('index'))
 
-    .get('/data.json', (req, res) => data.compute()
+    .get('/data.json', (req, res) => getData()
         .then(data => res.json(data))
         .catch(err => console.log(err)))
 
