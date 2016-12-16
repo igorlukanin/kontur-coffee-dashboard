@@ -11,18 +11,34 @@ h1 {
 }
 
 .week-header {
+    color: #666;
     font-size: 11pt;
-    letter-spacing: 0.25em;
+    letter-spacing: 0.15em;
     line-height: 3em;
     text-transform: uppercase;
 }
 
-.week-header__days:before {
+.week-header > *:first-child {
+    margin-left: -1.75em;
+}
+
+.week-header > *:first-child:before {
+    content: none;
+}
+
+.week-header > *:before {
     content: '\00b7  ';
 }
 
-.week-header__days {
-    opacity: 0.5;
+.week-header__live {
+    opacity: inherit;
+    transition: opacity 1s;
+
+}
+
+.week-header__live-hidden {
+    opacity: 0;
+    transition: opacity 1s;
 }
 
 .columns {

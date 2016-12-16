@@ -89,7 +89,6 @@ const getPenetrationAndAcquisition = () => Promise.all([
         acquisition: {},
         acquiredGuests: {},
         retention: {},
-        churn: {},
         rooms: {},
         pollination: {}
     };
@@ -111,7 +110,6 @@ const getPenetrationAndAcquisition = () => Promise.all([
         data.acquisition[i] = Math.round(data.acquiredGuests[i] / officeWorkersCount * 100);
 
         data.retention[i] = Math.round((userNames.length - data.acquiredGuests[i]) / beforeCount * 100);
-        data.churn[i] = Math.round((beforeCount - (userNames.length - data.acquiredGuests[i])) / beforeCount * 100);
 
         const weeklyRooms = _.countBy(_.uniqBy(groups[i], 'login').map(sale => sale.room));
         data.rooms[i] = Math.round(100 * Object.keys(weeklyRooms).length / officeRoomsCount);
@@ -120,14 +118,12 @@ const getPenetrationAndAcquisition = () => Promise.all([
 
     const weeklyPenetration = _.chain(data.penetration).values();
     const weeklyRetention = _.chain(data.retention).values();
-    const weeklyChurn = _.chain(data.churn).values();
     const weeklyRooms = _.chain(data.rooms).values();
 
     return _.merge(data, {
         max: {
             penetration: weeklyPenetration.max(),
             retention: weeklyRetention.max(),
-            churn: weeklyChurn.max(),
             rooms: weeklyRooms.max()
         },
         officeWorkersCount,

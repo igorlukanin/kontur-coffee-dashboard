@@ -32,17 +32,17 @@ var updateData;
 
             bar.append('rect')
                 .classed('chart__bar_one', true)
-                .attr('y', function(d) { return yScale(topValues(data)[week]); })
-                .attr('height', function(d) { return options.height - yScale(topValues(data)[week]); })
+                .attr('y', function(d) { return yScale(topValues(data, week)); })
+                .attr('height', function(d) { return options.height - yScale(topValues(data, week)); })
                 .attr('width', barWidth);
 
             bar.append('rect')
                 .classed('chart__bar_two', true)
-                .attr('y', function(d) { return yScale(bottomValues(data)[week]); })
-                .attr('height', function(d) { return options.height - yScale(bottomValues(data)[week]); })
+                .attr('y', function(d) { return yScale(bottomValues(data, week)); })
+                .attr('height', function(d) { return options.height - yScale(bottomValues(data, week)); })
                 .attr('width', barWidth);
 
-            var workDays = daysValues(data)[week];
+            var workDays = daysValues(data, week);
 
             if (workDays != options.usualWorkDays) {
                 bar.append('text')
@@ -111,7 +111,7 @@ var updateData;
     };
 
     var setCounters = function(data, week) {
-        d3.select('.placeholder__week-number').text(week);
+        d3.select('.placeholder__week-number').text('Week ' + week);
         d3.select('.placeholder__week-days').text(getDaysText(week));
         d3.select('.placeholder__week-days-count').text(getDaysCountText(data.workDays[week]));
 
@@ -129,7 +129,6 @@ var updateData;
         d3.select('.placeholder__week-new-guests').text(data.acquiredGuests[week]);
 
         d3.select('.placeholder__week-retention').text(data.retention[week]);
-        d3.select('.placeholder__week-churn').text(data.churn[week]);
 
         d3.select('.placeholder__week-room-pollination').text(data.pollination[week]);
         d3.select('.placeholder__week-rooms').text(data.rooms[week]);
@@ -166,33 +165,33 @@ var updateData;
             drawBarCharts(data, [{
                 selector: '.chart__users-and-sales',
                 max: function(data) { return data.max.sales; },
-                top: function(data) { return data.sales; },
-                bottom: function(data) { return data.users; },
-                day: function(data) { return data.workDays; }
+                top: function(data, week) { return data.sales[week]; },
+                bottom: function(data, week) { return data.users[week]; },
+                day: function(data, week) { return data.workDays[week]; }
             }, {
                 selector: '.chart__arpg-and-arps',
-                max: function (data) { return data.max.arpg; },
-                top: function (data) { return data.arpg; },
-                bottom: function (data) { return data.arps; },
-                day: function(data) { return data.workDays; }
+                max: function(data) { return data.max.arpg; },
+                top: function(data, week) { return data.arpg[week]; },
+                bottom: function(data, week) { return data.arps[week]; },
+                day: function(data, week) { return data.workDays[week]; }
             }, {
                 selector: '.chart__penetration-and-acquisition',
-                max: function (data) { return data.max.penetration; },
-                top: function (data) { return data.penetration; },
-                bottom: function (data) { return data.acquisition; },
-                day: function(data) { return data.workDays; }
+                max: function(data) { return data.max.penetration; },
+                top: function(data, week) { return data.penetration[week]; },
+                bottom: function(data, week) { return data.acquisition[week]; },
+                day: function(data, week) { return data.workDays[week]; }
             }, {
-                selector: '.chart__retention-and-churn',
-                max: function (data) { return Math.max(data.max.churn, data.max.retention); },
-                top: function (data) { return data.churn; },
-                bottom: function (data) { return data.retention; },
-                day: function(data) { return data.workDays; }
+                selector: '.chart__retention',
+                max: function(data) { return data.max.retention; },
+                top: function(data, week) { return data.retention[week]; },
+                bottom: function(data, week) { return 0; },
+                day: function(data, week) { return data.workDays[week]; }
             }, {
                 selector: '.chart__room-pollination',
-                max: function (data) { return data.max.rooms; },
-                top: function (data) { return data.rooms; },
-                bottom: function (data) { return data.pollination; },
-                day: function(data) { return data.workDays; }
+                max: function(data) { return data.max.rooms; },
+                top: function(data, week) { return data.rooms[week]; },
+                bottom: function(data, week) { return data.pollination[week]; },
+                day: function(data, week) { return data.workDays[week]; }
             }]);
         });
     };

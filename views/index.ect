@@ -13,9 +13,10 @@
         <h1>Coffee Shop at the Wide River</h1>
 
         <div class="week-header">
-            Week <span class="placeholder__week-number"></span>
-            <span class="week-header__days placeholder__week-days"></span>
-            <span class="week-header__days placeholder__week-days-count"></span>
+            <span><span class="week-header__live">☕</span> Live data</span>
+            <span class="placeholder__week-number"></span>
+            <span class="placeholder__week-days"></span>
+            <span class="placeholder__week-days-count"></span>
         </div>
 
         <div class="columns">
@@ -96,12 +97,6 @@
                             <span class="placeholder__week-retention">0</span><span class="sign">%</span>
                         </span>
                     </div>
-                    <div class="counters__counter">
-                        Churn
-                        <span class="counters__counter__value">
-                            <span class="placeholder__week-churn">0</span><span class="sign">%</span>
-                        </span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -111,7 +106,7 @@
                 <div class="chart chart__penetration-and-acquisition"></div>
             </div>
             <div class="columns__column">
-                <div class="chart chart__retention-and-churn"></div>
+                <div class="chart chart__retention"></div>
             </div>
         </div>
 
@@ -154,6 +149,22 @@
                 updateData();
 
                 setInterval(updateData, 15000);
+
+                var liveIndicatorClasses = [
+                    'week-header__live',
+                    'week-header__live-hidden'
+                ];
+
+                var currentLiveIndicatorClass = 0;
+
+                setInterval(function() {
+                    var currentClass = liveIndicatorClasses[currentLiveIndicatorClass];
+
+                    currentLiveIndicatorClass = (1 + currentLiveIndicatorClass) % 2;
+                    var nextClass = liveIndicatorClasses[currentLiveIndicatorClass];
+
+                    document.querySelector('.' + currentClass).className = nextClass;
+                }, 1000);
             });
         </script>
 
