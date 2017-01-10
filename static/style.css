@@ -18,7 +18,7 @@ h1 {
 }
 
 .week-header > *:first-child {
-    margin-left: -1.75em;
+    margin-left: -1em;
 }
 
 .week-header > *:first-child:before {
