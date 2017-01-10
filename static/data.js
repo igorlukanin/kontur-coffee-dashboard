@@ -5,9 +5,13 @@ var updateData;
         return moment.format('MMM D');
     };
 
-    var getDaysText = function(week) {
-        var startOfWeek = moment().week(week).weekday(1);
-        var endOfWeek = moment().week(week).weekday(7);
+    var getWeekText = function(weekTimestamp) {
+        return 'Week ' + moment.unix(weekTimestamp).week();
+    };
+
+    var getDaysText = function(weekTimestamp) {
+        var startOfWeek = moment.unix(weekTimestamp).weekday(1);
+        var endOfWeek = moment.unix(weekTimestamp).weekday(7);
 
         return startOfWeek.month() == endOfWeek.month()
             ? getDayText(startOfWeek) + '–' + endOfWeek.format('D')
@@ -77,7 +81,7 @@ var updateData;
 
         var x = d3.scaleLinear()
             .range([0, options.width])
-            .domain([+data.min.week, +data.max.week + 1]);
+            .domain([+data.min.week, +data.max.week + (+data.max.week - +data.min.week) / data.weeks.length]);
 
         var y = d3.scaleLinear()
             .range([options.height, 0])
@@ -94,14 +98,14 @@ var updateData;
             .classed('chart__x-scale-date', true)
             .attr('x', 0)
             .attr('y', options.xScaleHeight)
-            .text(getDayText(moment().week(data.min.week).weekday(1)));
+            .text(getDayText(moment.unix(data.min.week).startOf('week')));
 
         xScaleLine.append('text')
             .classed('chart__x-scale-date', true)
             .attr('text-anchor', 'end')
             .attr('x', options.width)
             .attr('y', options.xScaleHeight)
-            .text(getDayText(moment().week(data.max.week).weekday(7)));
+            .text(getDayText(moment.unix(data.max.week).startOf('week')));
 
         chart.on('mouseout', function() {
             highlightLastWeek(selections, data);
@@ -111,7 +115,7 @@ var updateData;
     };
 
     var setCounters = function(data, week) {
-        d3.select('.placeholder__week-number').text('Week ' + week);
+        d3.select('.placeholder__week-number').text(getWeekText(week));
         d3.select('.placeholder__week-days').text(getDaysText(week));
         d3.select('.placeholder__week-days-count').text(getDaysCountText(data.workDays[week]));
 
