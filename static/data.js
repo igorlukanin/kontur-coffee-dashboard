@@ -6,7 +6,7 @@ var updateData;
     };
 
     var getWeekText = function(weekTimestamp) {
-        return 'Week ' + moment.unix(weekTimestamp).week();
+        return 'Week ' + moment.unix(weekTimestamp).isoWeek();
     };
 
     var getDaysText = function(weekTimestamp) {
@@ -98,14 +98,14 @@ var updateData;
             .classed('chart__x-scale-date', true)
             .attr('x', 0)
             .attr('y', options.xScaleHeight)
-            .text(getDayText(moment.unix(data.min.week).startOf('week')));
+            .text(getDayText(moment.unix(data.min.week).startOf('isoweek')));
 
         xScaleLine.append('text')
             .classed('chart__x-scale-date', true)
             .attr('text-anchor', 'end')
             .attr('x', options.width)
             .attr('y', options.xScaleHeight)
-            .text(getDayText(moment.unix(data.max.week).startOf('week')));
+            .text(getDayText(moment.unix(data.max.week).endOf('isoweek')));
 
         chart.on('mouseout', function() {
             highlightLastWeek(selections, data);

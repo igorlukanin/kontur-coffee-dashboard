@@ -8,7 +8,7 @@ const db = require('./db');
 const getSalesAndGuests = () => db.getSales().then(sales => {
     const allSales = sales.map(sale => {
         sale.sum = +sale.sum;
-        sale.week = moment(sale.datetime).startOf('week').unix();
+        sale.week = moment(sale.datetime).startOf('isoweek').unix();
         sale.anonymous = sale.client_personnel_number === '';
 
         return sale;
@@ -78,7 +78,7 @@ const getPenetrationAndAcquisition = () => Promise.all([
     const officeWorkersCount = result[0];
 
     const knownUsersSales = result[1].map(sale => {
-        sale.week = moment(sale.datetime).startOf('week').unix();
+        sale.week = moment(sale.datetime).startOf('isoweek').unix();
         return sale;
     });
 
@@ -136,7 +136,7 @@ const compute = () => Promise.all([ getSalesAndGuests(), getPenetrationAndAcquis
 
 const getNewGuestsByWeek = () => db.getOfficeSales().then(sales => {
     const knownUsersSales = sales.map(sale => {
-        sale.week = moment(sale.datetime).startOf('week').unix();
+        sale.week = moment(sale.datetime).startOf('isoweek').unix();
         return sale;
     });
 
