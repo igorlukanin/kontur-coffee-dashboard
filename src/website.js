@@ -2,6 +2,7 @@ const compression = require('compression');
 const config = require('config');
 const ect = require('ect');
 const express = require('express');
+const moment = require('moment');
 const Promise = require('bluebird');
 
 const data = require('./data');
@@ -47,13 +48,15 @@ express()
     .get('/guests.json', (req, res) => data.getNewGuestsByWeek()
         .then(data => {
             const weeks = Object.keys(data);
-            const lastWeek = weeks[weeks.length - 1];
 
             const selectedData = {};
-            selectedData[lastWeek] = data[lastWeek];
 
-            if (data[lastWeek - 1] !== undefined) {
-                selectedData[lastWeek - 1] = data[lastWeek - 1];
+            const lastWeek = weeks[weeks.length - 1];
+            selectedData[moment.unix(lastWeek).isoWeek()] = data[lastWeek];
+
+            const secondLastWeek = weeks[weeks.length - 2];
+            if (data[secondLastWeek] !== undefined) {
+                selectedData[moment.unix(secondLastWeek).isoWeek()] = data[secondLastWeek];
             }
 
             res.setHeader('Content-Type', 'application/json');
