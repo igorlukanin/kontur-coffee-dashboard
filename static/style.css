@@ -40,6 +40,19 @@ h1 {
     transition: opacity 1s;
 }
 
+.week-header__link {
+    opacity: .5;
+}
+
+.week-header__link:hover {
+    opacity: 1;
+}
+
+.week-header__link a {
+    color: inherit;
+    text-decoration: none;
+}
+
 .columns {
 
 }
