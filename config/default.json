@@ -2,9 +2,9 @@
   "crawler": {
     "restart_interval_ms": 36000000
   },
-    "loader": {
-      "restart_interval_ms": 60000
-    },
+  "loader": {
+    "restart_interval_ms": 60000
+  },
   "staff": {
     "delay_ms": 300,
     "client_id": "",
@@ -24,6 +24,7 @@
   },
   "website": {
     "port": 3090,
-    "data_cache_interval_ms": 60000
+    "data_cache_interval_ms": 60000,
+    "date_frame_days": 180
   }
 }

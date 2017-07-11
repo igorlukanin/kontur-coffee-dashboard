@@ -7,9 +7,14 @@ const connection = r.connect({
     db: config.get('rethinkdb.db')
 });
 
+const dateFrame = config.get('website.date_frame_days') * 24 * 60 * 60
+
 
 const getSales = () => connection.then(c => r.table('sales')
-    .filter(r.row('status').eq('2'))
+    .filter(r.and(
+        r.row('status').eq('2'),
+        r.row('datetime').add(dateFrame).gt(r.now())
+    ))
     .pluck('client_personnel_number', 'sum', 'datetime')
     .run(c)
     .then(cursor => cursor.toArray()));

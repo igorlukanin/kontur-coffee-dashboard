@@ -6,13 +6,19 @@ const db = require('./db');
 
 
 const getSalesAndGuests = () => db.getSales().then(sales => {
+    const firstMonday = sales.reduce((monday, sale) => {
+        return monday === undefined && moment(sale.datetime).isoWeekday() === 1
+            ?  moment(sale.datetime).startOf('isoweek').unix()
+            : monday
+    }, undefined)
+
     const allSales = sales.map(sale => {
         sale.sum = +sale.sum;
         sale.week = moment(sale.datetime).startOf('isoweek').unix();
         sale.anonymous = sale.client_personnel_number === '';
 
         return sale;
-    });
+    }).filter(sale => sale.week > firstMonday)
 
     const groupedSales = _.groupBy(allSales, 'anonymous');
     const knownUsersSales = groupedSales[false];
